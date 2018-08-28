@@ -28,7 +28,7 @@ openssl req \
 ## Start the server
 
 ```bash
-./hello-http-https
+hello-http-https
 ```
 
 ### Server configuration
@@ -37,7 +37,7 @@ The server is configurable through CLI flags. For details on usage, run the
 following command:
 
 ```bash
-./hello-http-https -help
+hello-http-https -help
 ```
 
 You should see something like this:
@@ -66,5 +66,5 @@ If you wish for the server to answer to all paths, use the `-uri-path` flag with
 the `/` value:
 
 ```bash
-./hello-http-https -uri-path /
+hello-http-https -uri-path /
 ```
