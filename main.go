@@ -23,6 +23,15 @@ type HelloConfiguration struct {
 	uriPath           string
 }
 
+// Log logs the contents of conf.
+func (conf *HelloConfiguration) Log() {
+	log.Println("HTTP port:", conf.httpPort)
+	log.Println("HTTPS port:", conf.httpsPort)
+	log.Println("SSL key:", conf.serverKey)
+	log.Println("SSL certificate:", conf.serverCertificate)
+	log.Println("URI path:", conf.uriPath)
+}
+
 // ParseFlags parses CLI flags for any configuration parameters.
 func ParseFlags() HelloConfiguration {
   var conf HelloConfiguration
@@ -58,7 +67,7 @@ func ListenHttpHttps(conf HelloConfiguration) {
   // Start the HTTP server.
 	go func() {
 		defer wg.Done()
-    fmt.Println("Starting to listen for HTTP requests on port", conf.httpPort)
+    log.Println("Listening for HTTP requests...")
 		err := http.ListenAndServe(fmt.Sprint(":", conf.httpPort), nil)
 		if err != nil {
 			log.Fatal(fmt.Sprint("Could not listen on port ", conf.httpPort, ": "), err)
@@ -68,7 +77,7 @@ func ListenHttpHttps(conf HelloConfiguration) {
   // Start the HTTPS server.
 	go func() {
 		defer wg.Done()
-    fmt.Println("Starting to listen for HTTPS requests on port", conf.httpsPort)
+    log.Println("Listening for HTTPS requests...")
 		err := http.ListenAndServeTLS(fmt.Sprint(":", conf.httpsPort), conf.serverCertificate, conf.serverKey, nil)
 		if err != nil {
 			log.Fatal(fmt.Sprint("Could not listen on port ", conf.httpsPort, ": "), err)
@@ -79,11 +88,7 @@ func ListenHttpHttps(conf HelloConfiguration) {
 }
 
 func main() {
-	// conf := HelloConfiguration{
-	// 	httpPort: 80, httpsPort: 443,
-	// 	serverKey: "server.key", serverCertificate: "server.crt",
-	// 	uriPath: "/hello-world",
-	// }
   conf := ParseFlags()
+	conf.Log()
 	ListenHttpHttps(conf)
 }
