@@ -37,12 +37,42 @@ func ParseFlags() HelloConfiguration {
 	var conf HelloConfiguration
 	var helpWanted bool
 
-	flag.BoolVar(&helpWanted, "help", false, "Prints this usage message")
-	flag.IntVar(&conf.httpPort, "http-port", 80, "Port used to listen for HTTP requests")
-	flag.IntVar(&conf.httpsPort, "https-port", 443, "Port used to listen for HTTPS requests")
-	flag.StringVar(&conf.serverKey, "ssl-key", "server.key", "SSL key file for HTTPS server")
-	flag.StringVar(&conf.serverCertificate, "ssl-certificate", "server.crt", "SSL certificate file for HTTPS server")
-	flag.StringVar(&conf.uriPath, "uri-path", "/hello-world", "URI path to respond to")
+	flag.BoolVar(
+		&helpWanted,
+		"help",
+		false,
+		"Prints this usage message",
+	)
+	flag.IntVar(
+		&conf.httpPort,
+		"http-port",
+		80,
+		"Port used to listen for HTTP requests",
+	)
+	flag.IntVar(
+		&conf.httpsPort,
+		"https-port",
+		443,
+		"Port used to listen for HTTPS requests",
+	)
+	flag.StringVar(
+		&conf.serverKey,
+		"ssl-key",
+		"server.key",
+		"SSL key file for HTTPS server",
+	)
+	flag.StringVar(
+		&conf.serverCertificate,
+		"ssl-certificate",
+		"server.crt",
+		"SSL certificate file for HTTPS server",
+	)
+	flag.StringVar(
+		&conf.uriPath,
+		"uri-path",
+		"/hello-world",
+		"URI path to respond to",
+	)
 
 	flag.Parse()
 
@@ -68,9 +98,12 @@ func ListenHttpHttps(conf HelloConfiguration) {
 	go func() {
 		defer wg.Done()
 		log.Println("Listening for HTTP requests...")
-		err := http.ListenAndServe(fmt.Sprint(":", conf.httpPort), nil)
+		err := http.ListenAndServe(
+			fmt.Sprint(":", conf.httpPort),
+			nil,
+		)
 		if err != nil {
-			log.Fatal(fmt.Sprint("Could not listen on port ", conf.httpPort, ": "), err)
+			log.Fatal("Could not listen on port ", conf.httpPort, ": ", err)
 		}
 	}()
 
@@ -78,9 +111,14 @@ func ListenHttpHttps(conf HelloConfiguration) {
 	go func() {
 		defer wg.Done()
 		log.Println("Listening for HTTPS requests...")
-		err := http.ListenAndServeTLS(fmt.Sprint(":", conf.httpsPort), conf.serverCertificate, conf.serverKey, nil)
+		err := http.ListenAndServeTLS(
+			fmt.Sprint(":", conf.httpsPort),
+			conf.serverCertificate,
+			conf.serverKey,
+			nil,
+		)
 		if err != nil {
-			log.Fatal(fmt.Sprint("Could not listen on port ", conf.httpsPort, ": "), err)
+			log.Fatal("Could not listen on port ", conf.httpsPort, ": ", err)
 		}
 	}()
 
